@@ -1,0 +1,37 @@
+server.port: 5550
+
+spring:
+  datasource:
+    #url: jdbc:sqlserver://powerbank.c51u3kczrbio.eu-west-1.rds.amazonaws.com:1433;databaseName=postbridge_prod
+    url: jdbc:sqlserver://banklydb.crct0q0vhjlm.eu-west-2.rds.amazonaws.com:1433;databaseName=postbridge_switch_dev
+    #url: jdbc:mysql://metis.c7hg15g1uh6x.us-west-1.rds.amazonaws.com:3306/switchdb?createDatabaseIfNotExist=true&autoReconnect=true&useSSL=false&serverTimezone=UTC
+   # username: administrator
+    username: spadmin
+    #username: qucoon
+    password: Y4SQZaLso!fPg3LiMGkAZzJ4G
+    #password: Bubbles!123
+    #password: Password123
+    hikari:
+      maximum-pool-size: 500
+      connection-test-query: SELECT 1
+      max-lifetime: 30000
+      minimum-idle: 10
+      idle-timeout: 20000
+  jpa:
+    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    hibernate:
+      show-sql: false
+      proc:
+        param_null_passing: true
+      ddl-auto: update
+
+asyncworker:
+  poolsize: 500
+
+
+
+nibss:
+  terminal:
+    id:
+      source: tms
+# logging.level.com.zaxxer.hikari: TRACE
