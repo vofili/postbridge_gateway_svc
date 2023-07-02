@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="tms-switch-postbridge" />
+        <module name="tms-switch-lib" />
+        <module name="tms-pos" />
+        <module name="tms-switch-service" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="tms-pos" target="1.8" />
+      <module name="tms-switch" target="1.8" />
+      <module name="tms-switch-lib" target="1.8" />
+      <module name="tms-switch-postbridge" target="1.8" />
+      <module name="tms-switch-service" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="tms-pos" options="-parameters" />
+      <module name="tms-switch-lib" options="-parameters" />
+      <module name="tms-switch-postbridge" options="-parameters" />
+      <module name="tms-switch-service" options="-parameters" />
+    </option>
+  </component>
+</project>

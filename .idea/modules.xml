@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/tms-pos/tms-pos.iml" filepath="$PROJECT_DIR$/tms-pos/tms-pos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tms-switch.iml" filepath="$PROJECT_DIR$/tms-switch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tms-switch-lib/tms-switch-lib.iml" filepath="$PROJECT_DIR$/tms-switch-lib/tms-switch-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tms-switch-postbridge/tms-switch-postbridge.iml" filepath="$PROJECT_DIR$/tms-switch-postbridge/tms-switch-postbridge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tms-switch-service/tms-switch-service.iml" filepath="$PROJECT_DIR$/tms-switch-service/tms-switch-service.iml" />
+    </modules>
+  </component>
+</project>
