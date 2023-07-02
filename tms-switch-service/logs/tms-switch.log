@@ -1,0 +1,26 @@
+2022-02-24 09-24-13 - Starting TmsSwitchApplication on As-MacBook-Pro.local with PID 11209 (/Users/Moraking/IdeaProjects/tms-switch/tms-switch-service/target/classes started by Moraking in /Users/Moraking/IdeaProjects/tms-switch/tms-switch-service)
+2022-02-24 09-24-13 - Running with Spring Boot v2.1.2.RELEASE, Spring v5.1.4.RELEASE
+2022-02-24 09-24-13 - No active profile set, falling back to default profiles: default
+2022-02-24 09-24-24 - Starting AsyncWorkerPool with pool size 500
+2022-02-24 09-24-26 - Constructing postbridge interchange
+2022-02-24 09-24-26 - Starting postbridge sink
+2022-02-24 09-24-26 - Constructing pos rest tms interchange
+2022-02-24 09-24-26 - Connecting to server 172.24.2.80:36793
+2022-02-24 09-24-29 - Started TmsSwitchApplication in 16.502 seconds (JVM running for 23.504)
+2022-02-24 09-25-42 - Failure to connect to remote 172.24.2.80:36793
+java.net.ConnectException: Operation timed out (Connection timed out)
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:476)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:218)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:200)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:394)
+	at java.net.Socket.connect(Socket.java:606)
+	at java.net.Socket.connect(Socket.java:555)
+	at com.tms.lib.network.io.TwoBytesLenSingleClientIOSocket.connectLoop(TwoBytesLenSingleClientIOSocket.java:70)
+	at com.tms.lib.network.SingleClientSocketChannel.lambda$new$1(SingleClientSocketChannel.java:60)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+2022-02-24 09-25-42 - Connecting to server 172.24.2.80:36793
+2022-02-24 09-26-28 - Async worker shutdown

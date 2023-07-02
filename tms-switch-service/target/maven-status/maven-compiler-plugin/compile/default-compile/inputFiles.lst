@@ -1,0 +1,9 @@
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/config/AppConfig.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/apimodel/InterchangeConfigDTO.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/TmsSwitchApplication.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/controller/InterchangeController.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/controller/TerminalController.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/controller/RoutingController.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/controller/TmsCtmkController.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/apimodel/PosTerminalDTO.java
+/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/src/main/java/com/tms/service/apimodel/RoutingRuleDTO.java
