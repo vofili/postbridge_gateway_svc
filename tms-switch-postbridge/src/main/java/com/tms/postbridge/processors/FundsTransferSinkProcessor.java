@@ -35,9 +35,12 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
         try {
             isoMsg.setMTI("0200");
             String processingCode = transactionRequest.getProcessingCode();
+            log.trace("Processing Code received from Bankly-TMS: >>> "+processingCode);
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
            // isoMsg.set(3, "50" + fromAndToAccountType);
-             isoMsg.set(3, "00" + fromAndToAccountType);
+            String iswProcessingCode = "00"+fromAndToAccountType;
+             isoMsg.set(3, iswProcessingCode);
+             log.trace("Processing Code Forwarded to ISW >>> "+iswProcessingCode);
             PostBridgeSinkIsoChannelAdapter.transactionRequestToCommonIsoMsg(transactionRequest, isoMsg);
 
             PostBridgeUserParameters userParameters = ((PostBridgeInterchange) transactionRequest.getSinkInterchange()).getPostBridgeUserParameters();
