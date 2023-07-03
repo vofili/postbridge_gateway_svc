@@ -14,7 +14,36 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.2.RELEASE</version>
     </parent>
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+<!--    <build>-->
 
+<!--<plugins>-->
+<!--    <plugin>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--        <executions>-->
+<!--            <execution>-->
+<!--                <goals>-->
+<!--                    <goal>repackage</goal>-->
+<!--                </goals>-->
+<!--                <configuration>-->
+<!--                    <classifier>spring-boot</classifier>-->
+<!--                    <mainClass>-->
+<!--                        com.tms.service.TmsSwitchApplication-->
+<!--                    </mainClass>-->
+<!--                </configuration>-->
+<!--            </execution>-->
+<!--        </executions>-->
+<!--    </plugin>-->
+<!--    </plugins>-->
+<!--    </build>-->
     <dependencies>
         <dependency>
             <groupId>org.jpos</groupId>
