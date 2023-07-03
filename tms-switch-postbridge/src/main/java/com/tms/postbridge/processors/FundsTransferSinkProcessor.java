@@ -36,7 +36,8 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
             isoMsg.setMTI("0200");
             String processingCode = transactionRequest.getProcessingCode();
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
-            isoMsg.set(3, "50" + fromAndToAccountType);
+           // isoMsg.set(3, "50" + fromAndToAccountType);
+             isoMsg.set(3, "00" + fromAndToAccountType);
             PostBridgeSinkIsoChannelAdapter.transactionRequestToCommonIsoMsg(transactionRequest, isoMsg);
 
             PostBridgeUserParameters userParameters = ((PostBridgeInterchange) transactionRequest.getSinkInterchange()).getPostBridgeUserParameters();
