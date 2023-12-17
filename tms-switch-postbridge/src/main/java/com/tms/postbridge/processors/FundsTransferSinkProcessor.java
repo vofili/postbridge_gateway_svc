@@ -37,10 +37,39 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
             String processingCode = transactionRequest.getProcessingCode();
             log.trace("Processing Code received from Bankly-TMS: >>> "+processingCode);
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
-           // isoMsg.set(3, "50" + fromAndToAccountType);
-            String iswProcessingCode = "00"+fromAndToAccountType;
-             isoMsg.set(3, iswProcessingCode);
-             log.trace("Processing Code Forwarded to ISW >>> "+iswProcessingCode);
+            String iswProcessingCode;
+            if(
+
+                            transactionRequest.getPan().startsWith("519911") ||
+                            transactionRequest.getPan().startsWith("492069")
+//                            transactionRequest.getPan().startsWith("521090") ||
+//                            transactionRequest.getPan().startsWith("522899") ||
+//                            transactionRequest.getPan().startsWith("525634") ||
+//                            transactionRequest.getPan().startsWith("588655") ||
+//                            transactionRequest.getPan().startsWith("422522") ||
+//                            transactionRequest.getPan().startsWith("517868") ||
+//                            transactionRequest.getPan().startsWith("519863") ||
+//                            transactionRequest.getPan().startsWith("519885") ||
+//                            transactionRequest.getPan().startsWith("404905") ||
+//                            transactionRequest.getPan().startsWith("407591") ||
+//                            transactionRequest.getPan().startsWith("420358") ||
+//                            transactionRequest.getPan().startsWith("420359") ||
+//                            transactionRequest.getPan().startsWith("422500") ||
+//                            transactionRequest.getPan().startsWith("422584") ||
+//                            transactionRequest.getPan().startsWith("422594") ||
+//                            transactionRequest.getPan().startsWith("428223") ||
+//                            transactionRequest.getPan().startsWith("539941")
+
+
+
+            ) {
+                iswProcessingCode="50" + fromAndToAccountType;
+           } else {
+                //Recommended to set isWProcessing Ccode to 500000
+                iswProcessingCode = "500000";
+           }
+            log.trace("Processing Code Forwarded to ISW >>> "+iswProcessingCode);
+            isoMsg.set(3, iswProcessingCode);
             PostBridgeSinkIsoChannelAdapter.transactionRequestToCommonIsoMsg(transactionRequest, isoMsg);
 
             PostBridgeUserParameters userParameters = ((PostBridgeInterchange) transactionRequest.getSinkInterchange()).getPostBridgeUserParameters();
@@ -62,8 +91,6 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
             }
             f43=f43+loc+"LANG";
             //2HIG0010 TELLERPOINT LAGOS          LANG
-
-
 
 
             isoMsg.set(43,f43);
