@@ -1,0 +1,6 @@
+2023-12-16 17-50-26 - Starting TmsSwitchApplication on Valies-MBP.local with PID 31606 (/Users/val/NubeeroDev/tms-switch-service-pbg/tms-switch-service/target/classes started by val in /Users/val/NubeeroDev/tms-switch-service-pbg)
+2023-12-16 17-50-26 - Running with Spring Boot v2.1.2.RELEASE, Spring v5.1.4.RELEASE
+2023-12-16 17-50-26 - No active profile set, falling back to default profiles: default
+2023-12-16 17-50-31 - Starting AsyncWorkerPool with pool size 500
+2023-12-16 17-50-33 - Started TmsSwitchApplication in 7.248 seconds (JVM running for 8.025)
+2023-12-16 17-50-50 - Async worker shutdown
