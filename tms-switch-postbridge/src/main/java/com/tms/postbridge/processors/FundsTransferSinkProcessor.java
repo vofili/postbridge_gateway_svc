@@ -117,7 +117,8 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
             isoMsg.set("127.003", f127033);
             isoMsg.set("127.013", StringUtils.leftPad("000000 566", 17, ' '));
             isoMsg.set("127.033", userParameters.getExtendedTransactionType());
-
+            //Single leg modification new value for fields 127.022
+            isoMsg.set("127.022","506146");
         } catch (ISOException | UtilOperationException e) {
             String msg = String.format("There was a channel error converting postbridge funds transfer message ex: %s", e.toString());
             throw new TransactionProcessingException(msg, e);
