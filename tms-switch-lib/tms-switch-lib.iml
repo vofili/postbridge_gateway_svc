@@ -104,7 +104,7 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-core:5.1.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jcl:5.1.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8" level="project" />
+    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre8" level="project" />
     <orderEntry type="library" name="Maven: com.sleepycat:je:4.0.92" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20230227" level="project" />
     <orderEntry type="library" name="Maven: org.jpos:jpos:2.1.0" level="project" />

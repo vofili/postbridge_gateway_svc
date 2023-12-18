@@ -76,6 +76,7 @@
     <orderEntry type="library" name="Maven: io.micrometer:micrometer-core:1.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.latencyutils:LatencyUtils:2.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.18.28" level="project" />
+    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-aop:2.1.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjweaver:1.9.2" level="project" />
@@ -108,7 +109,6 @@
     <orderEntry type="library" name="Maven: com.mchange:mchange-commons-java:0.2.11" level="project" />
     <orderEntry type="library" name="Maven: org.quartz-scheduler:quartz-jobs:2.3.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.1.4.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.microsoft.sqlserver:mssql-jdbc:6.4.0.jre8" level="project" />
     <orderEntry type="library" name="Maven: org.json:json:20230227" level="project" />
     <orderEntry type="module" module-name="tms-switch-postbridge" />
     <orderEntry type="module" module-name="tms-pos" />
