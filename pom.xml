@@ -61,6 +61,12 @@
             <artifactId>je</artifactId>
             <version>4.0.92</version>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.4.2.jre8</version>
+        </dependency>
+
 
     </dependencies>
     <modules>
