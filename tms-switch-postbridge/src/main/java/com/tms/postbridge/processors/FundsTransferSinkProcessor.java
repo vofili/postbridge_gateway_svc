@@ -9,6 +9,7 @@ import com.tms.lib.util.IsoUtil;
 import com.tms.postbridge.PostBridgeInterchange;
 import com.tms.postbridge.model.PostBridgeUserParameters;
 import com.tms.postbridge.util.PostBridgeSinkIsoChannelAdapter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jpos.iso.ISODate;
@@ -16,6 +17,7 @@ import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
 import org.springframework.stereotype.Component;
 
+import java.io.StringWriter;
 import java.util.Date;
 
 @Component
@@ -29,13 +31,13 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
 
     @Override
     public ISOMsg toISOMsg(TransactionRequest transactionRequest) throws TransactionProcessingException {
-        log.trace("Sending a funds transfer request");
+        log.info("Sending a funds transfer request");
         ISOMsg isoMsg = new ISOMsg();
 
         try {
             isoMsg.setMTI("0200");
             String processingCode = transactionRequest.getProcessingCode();
-            log.trace("Processing Code received from Bankly-TMS: >>> "+processingCode);
+            log.info("Processing Code received from Bankly-TMS: >>> "+processingCode);
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
             String iswProcessingCode;
             if(
@@ -117,8 +119,20 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
             isoMsg.set("127.003", f127033);
             isoMsg.set("127.013", StringUtils.leftPad("000000 566", 17, ' '));
             isoMsg.set("127.033", userParameters.getExtendedTransactionType());
+            //Single leg modification for 127.020
+            isoMsg.set("127.020",ISODate.formatDate(new Date(),"YYYYMMdd"));
             //Single leg modification new value for fields 127.022
-            isoMsg.set("127.022","506146");
+            log.info(getXMLRid("506146"));
+            isoMsg.set("127.022",getXMLRid("506146"));
+            log.info(getXMLRid("506146"));
+
+
+
+            isoMsg.getComponent(127).dump(System.out,"::");
+            log.info("ISO Field 127 Dump");
+           isoMsg.set("127.041","172.10.20.21,9034");
+
+            isoMsg.dump(System.out,">>");
         } catch (ISOException | UtilOperationException e) {
             String msg = String.format("There was a channel error converting postbridge funds transfer message ex: %s", e.toString());
             throw new TransactionProcessingException(msg, e);
@@ -144,6 +158,17 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
         return "000";
     }
 
+
+
+    private String getXMLRid(String rid){
+        StringWriter xmlString = new StringWriter();
+        xmlString.append("212ORIGINAL_RID235<ORIGINAL_RID>")
+                .append(rid)
+                .append("</ORIGINAL_RID>");
+
+
+        return xmlString.toString();
+    }
     @Override
     public TransactionResponse toTransactionResponse(ISOMsg isoMsg, TransactionRequest transactionRequest) throws TransactionProcessingException {
         if (isoMsg == null) {
