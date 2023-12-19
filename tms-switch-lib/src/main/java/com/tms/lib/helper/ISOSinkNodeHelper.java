@@ -79,7 +79,7 @@ public class ISOSinkNodeHelper {
        // }
 
         ISOMsg request = processorThatCanConvert.toISOMsg(transactionRequest);
-        log.trace("Raw request \r\n{}", IsoLogger.dump(request));
+        log.trace("Raw ISO request \r\n{}", IsoLogger.dump(request));
         ISOMsg rawResponse;
 
         try {
