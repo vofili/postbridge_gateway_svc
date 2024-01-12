@@ -59,8 +59,8 @@ public class PostBridgePackagerBBBitmap extends ISOBasePackager {
                 new IF_CHAR(4, "EXTENDED RESPONSE CODE"),
                 new IFA_LLCHAR(99, "ADDITIONAL POS DATA CODE"),
                 new IF_CHAR(2, "ORIGINAL RESPONSE CODE"),
-                new IFA_LLCHAR(17, "REMOTE ADDRESS"),
-                new IFA_LLCHAR(17, "LOCAL ADDRESS")
+                new IFA_LLCHAR(99, "REMOTE ADDRESS"),
+                new IFA_LLCHAR(99, "LOCAL ADDRESS")
         };
 
         protected PostPrivatePackager() {
