@@ -18,6 +18,7 @@ public class PurchaseSinkProcessor implements PostBridgeSinkTransactionProcessor
         return RequestType.PURCHASE == requestType;
     }
 
+
     @Override
     public ISOMsg toISOMsg(TransactionRequest transactionRequest) throws TransactionProcessingException {
         log.trace("Sending a purchase request");

@@ -1,7 +1,9 @@
 package com.tms.postbridge.processors;
 
+import com.tms.lib.exceptions.ReversalProcessingException;
 import com.tms.lib.exceptions.TransactionProcessingException;
 import com.tms.lib.exceptions.UtilOperationException;
+import com.tms.lib.interchange.Interchange;
 import com.tms.lib.model.RequestType;
 import com.tms.lib.model.TransactionRequest;
 import com.tms.lib.model.TransactionResponse;
@@ -31,13 +33,13 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
 
     @Override
     public ISOMsg toISOMsg(TransactionRequest transactionRequest) throws TransactionProcessingException {
-        log.info("Sending a funds transfer request");
+        log.info("Convert transaction request to ISOMsg");
         ISOMsg isoMsg = new ISOMsg();
 
         try {
             isoMsg.setMTI("0200");
             String processingCode = transactionRequest.getProcessingCode();
-            log.info("Processing Code received from Bankly-TMS: >>> "+processingCode);
+            log.info("Processing Code received from TMS: >>> "+processingCode);
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
             String iswProcessingCode;
             if(
@@ -185,4 +187,15 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
 
         return transactionResponse;
     }
+
+    @Override
+    public boolean canReverse(RequestType requestType) {
+        return RequestType.PURCHASE==requestType;
+    }
+
+    public TransactionRequest toReversalRequest(TransactionRequest transactionRequest, Interchange interchange){
+        return transactionRequest;
+    }
+
+
 }

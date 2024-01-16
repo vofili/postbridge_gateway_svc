@@ -182,7 +182,7 @@ public class ISOSinkNodeHelper {
             String keycheck = new String(TDesEncryptionUtil.generateKeyCheckValue(Hex.decodeHex(destinationEncryptionKey.toCharArray())));
             log.info("keycheck is {}", keycheck);
         }catch(Exception s){
-            log.error("could not geneerate keycheck",s);
+            log.error("could not generate keycheck",s);
         }
         pinTranslationRequest.setPan(pan);
         return pinTranslationRequest;
@@ -238,7 +238,7 @@ public class ISOSinkNodeHelper {
         }
 
         TransactionRequest reversalAdviceTransactionRequest = processorThatCanReverse.toReversalRequest(channelRequest, interchange);
-        log.trace("Channel request is {}", LogHelper.dump(reversalAdviceTransactionRequest));
+        log.info("Channel Reversal request is {}", reversalAdviceTransactionRequest.toString());
         reversalAdviceTransactionRequest.setOriginalTransactionId(channelRequest.getTransactionId());
 
         ISOMsg rawRequest;
