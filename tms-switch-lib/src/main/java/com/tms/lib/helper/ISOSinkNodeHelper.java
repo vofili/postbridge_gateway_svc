@@ -25,6 +25,7 @@ import org.jpos.iso.ISOException;
 import org.jpos.iso.ISOMsg;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -79,7 +80,7 @@ public class ISOSinkNodeHelper {
        // }
 
         ISOMsg request = processorThatCanConvert.toISOMsg(transactionRequest);
-        log.trace("Raw ISO request \r\n{}", IsoLogger.dump(request));
+        log.trace("Raw ISO request \r\n {}", IsoLogger.dump(request));
         ISOMsg rawResponse;
 
         try {
@@ -113,6 +114,12 @@ public class ISOSinkNodeHelper {
             response.setResponseFromRemoteEntity(true);
             response.setRequestSent(true);
             response.setRequestRecordId(transactionRequest.getTransactionId());
+            //additional processing to reverse responseCodes -91,96,09
+            if(Arrays.asList("91","09","96").contains(response.getIsoResponseCode())){
+                log.error("An indeterminate response was received from switch, trigger reversal");
+                initiateReversal(transactionRequest, processorThatCanConvert);
+
+            }
         }
 
         log.trace("Channel response {}", LogHelper.dump(response));

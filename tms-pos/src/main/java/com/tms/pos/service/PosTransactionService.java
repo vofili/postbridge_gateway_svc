@@ -42,7 +42,6 @@ public class PosTransactionService {
 
     public TransactionResponse processCustomTransactionRequest(CustomTransactionRequest customTransactionRequest) throws TransactionProcessingException {
         log.info("Received new custom transaction request {}", LogHelper.dump(customTransactionRequest));
-
         return processTransactionRequest(fromCustomTransactionRequest(customTransactionRequest));
     }
 
@@ -116,6 +115,61 @@ public class PosTransactionService {
 
     public TransactionResponse processTransactionRequest(TransactionRequest transactionRequest) throws TransactionProcessingException {
         log.info("Received new transaction request {}", LogHelper.dump(transactionRequest));
+
+        Interchange interchange = interchangeFactory.getFirstMatchingInterchangeOfType(PosRestInterchange.POS_TYPE_NAME);
+
+        if (interchange == null) {
+            throw new TransactionProcessingException("Cannot find interchange for pos rest transaction");
+        }
+
+        PosRestSourceTransactionProcessor processorThatCanTreat = getProcessorThatCanTreat(transactionRequest);
+
+        if (processorThatCanTreat != null) {
+            TransactionResponse response = processorThatCanTreat.treat(transactionRequest);
+            log.trace("Transaction response is {} ", LogHelper.dump(response));
+            return response;
+        }
+
+        PosRestSourceTransactionProcessor processorThatCanConvert = getProcessorThatCanConvert(transactionRequest);
+
+        if (processorThatCanConvert == null) {
+            throw new TransactionProcessingException("Cannot find processor to process the request");
+        }
+
+        transactionRequest = processorThatCanConvert.convert(transactionRequest);
+
+        transactionRequest.setSourceInterchange(interchange);
+
+        saveTransactionRecord(transactionRequest, interchange.getConfig());
+
+        TransactionResponse transactionResponse;
+
+        try {
+            transactionResponse = router.route(transactionRequest);
+        } catch (Exception e) {
+            log.error("Could not route request", e);
+            transactionResponse = transactionRequest.constructResponse();
+            transactionResponse.setIsoResponseCode(DefaultIsoResponseCodes.SystemMalFunction);
+            transactionResponse.setResponseInterchange(interchange);
+        }
+
+        if (transactionResponse == null) {
+            transactionResponse = transactionRequest.constructResponse();
+            transactionResponse.setIsoResponseCode(DefaultIsoResponseCodes.InvalidResponse);
+            transactionResponse.setResponseInterchange(interchange);
+        } else {
+            if (transactionResponse.getResponseInterchange() == null) {
+                transactionResponse.setResponseInterchange(interchange);
+            }
+        }
+        log.trace("Channel response is {}", LogHelper.dump(transactionResponse));
+
+        updateTransactionRecord(transactionRequest, transactionResponse);
+        return transactionResponse;
+    }
+
+    public TransactionResponse processTransactionReversalRequest(TransactionRequest transactionRequest) throws TransactionProcessingException {
+        log.info("Received reversal transaction request {}", LogHelper.dump(transactionRequest));
 
         Interchange interchange = interchangeFactory.getFirstMatchingInterchangeOfType(PosRestInterchange.POS_TYPE_NAME);
 
