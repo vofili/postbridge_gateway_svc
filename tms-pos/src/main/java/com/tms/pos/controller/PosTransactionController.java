@@ -28,4 +28,9 @@ public class PosTransactionController {
     public TransactionResponse processCustomTransactionRequest(@RequestBody @Validated CustomTransactionRequest transactionRequest) throws TransactionProcessingException {
         return posTransactionService.processCustomTransactionRequest(transactionRequest);
     }
+
+    @PostMapping("/process-reversal")
+    public TransactionResponse processTransactionReversal(@RequestBody @Validated TransactionRequest transactionRequest) throws TransactionProcessingException {
+        return posTransactionService.processTransactionReversalRequest(transactionRequest);
+    }
 }
