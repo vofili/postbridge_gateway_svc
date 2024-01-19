@@ -4,6 +4,7 @@ import com.tms.lib.exceptions.ReversalProcessingException;
 import com.tms.lib.exceptions.TransactionProcessingException;
 import com.tms.lib.exceptions.UtilOperationException;
 import com.tms.lib.interchange.Interchange;
+import com.tms.lib.model.OriginalDataElements;
 import com.tms.lib.model.RequestType;
 import com.tms.lib.model.TransactionRequest;
 import com.tms.lib.model.TransactionResponse;
@@ -39,7 +40,7 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
         try {
             isoMsg.setMTI("0200");
             String processingCode = transactionRequest.getProcessingCode();
-            log.info("Processing Code received from TMS: >>> "+processingCode);
+            log.info("Processing Code received from TMS: >>> {}",processingCode);
             String fromAndToAccountType = StringUtils.isEmpty(processingCode) ? "0000" : processingCode.substring(2);
             String iswProcessingCode;
             if(
@@ -47,22 +48,6 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
                             transactionRequest.getPan().startsWith("519911") ||
                             transactionRequest.getPan().startsWith("492069")
 //                            transactionRequest.getPan().startsWith("521090") ||
-//                            transactionRequest.getPan().startsWith("522899") ||
-//                            transactionRequest.getPan().startsWith("525634") ||
-//                            transactionRequest.getPan().startsWith("588655") ||
-//                            transactionRequest.getPan().startsWith("422522") ||
-//                            transactionRequest.getPan().startsWith("517868") ||
-//                            transactionRequest.getPan().startsWith("519863") ||
-//                            transactionRequest.getPan().startsWith("519885") ||
-//                            transactionRequest.getPan().startsWith("404905") ||
-//                            transactionRequest.getPan().startsWith("407591") ||
-//                            transactionRequest.getPan().startsWith("420358") ||
-//                            transactionRequest.getPan().startsWith("420359") ||
-//                            transactionRequest.getPan().startsWith("422500") ||
-//                            transactionRequest.getPan().startsWith("422584") ||
-//                            transactionRequest.getPan().startsWith("422594") ||
-//                            transactionRequest.getPan().startsWith("428223") ||
-//                            transactionRequest.getPan().startsWith("539941")
 
 
 
@@ -72,7 +57,7 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
                 //Recommended to set isWProcessing Ccode to 500000
                 iswProcessingCode = "500000";
            }
-            log.trace("Processing Code Forwarded to ISW >>> "+iswProcessingCode);
+            log.trace("Processing Code Forwarded to ISW >>> {}",iswProcessingCode);
             isoMsg.set(3, iswProcessingCode);
             PostBridgeSinkIsoChannelAdapter.transactionRequestToCommonIsoMsg(transactionRequest, isoMsg);
 
@@ -136,7 +121,7 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
 
             isoMsg.dump(System.out,">>");
         } catch (ISOException | UtilOperationException e) {
-            String msg = String.format("There was a channel error converting postbridge funds transfer message ex: %s", e.toString());
+            String msg = String.format("There was a channel error converting postbridge funds transfer message exception: %s", e.toString());
             throw new TransactionProcessingException(msg, e);
         }
 
@@ -193,9 +178,13 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
         return RequestType.PURCHASE==requestType;
     }
 
+
     public TransactionRequest toReversalRequest(TransactionRequest transactionRequest, Interchange interchange){
+
         return transactionRequest;
     }
+
+
 
 
 }
