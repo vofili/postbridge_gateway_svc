@@ -332,7 +332,8 @@ public class ISOSinkNodeHelper {
         if (rawRequest != null) {
             try {
                 rawRequest.setMTI(processorThatCanReverse.getReversalAdviceMti());
-
+                log.info("Raw ISOMsg reversal request ");
+                rawRequest.dump(System.out," >>");
             } catch (ISOException e) {
                 throw new ReversalProcessingException("Could not set mti for reversal request", e);
             }
