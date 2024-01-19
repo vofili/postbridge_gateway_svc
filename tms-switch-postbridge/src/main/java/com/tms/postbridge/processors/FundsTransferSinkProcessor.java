@@ -116,7 +116,7 @@ public class FundsTransferSinkProcessor implements PostBridgeSinkTransactionProc
 
 
             isoMsg.getComponent(127).dump(System.out,"::");
-            log.info("ISO Field 127 Dump");
+
            isoMsg.set("127.041","172.10.20.21,9034");
 
             isoMsg.dump(System.out,">>");
