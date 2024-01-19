@@ -1,13 +1,10 @@
 package com.tms.lib.helper;
 
+import com.tms.lib.model.*;
 import com.tms.lib.transactionrecord.entities.TransactionRecord;
 import com.tms.lib.hsm.HsmService;
 import com.tms.lib.hsm.model.PinTranslationRequest;
 import com.tms.lib.interchange.Interchange;
-import com.tms.lib.model.DefaultIsoResponseCodes;
-import com.tms.lib.model.RequestType;
-import com.tms.lib.model.TransactionRequest;
-import com.tms.lib.model.TransactionResponse;
 import com.tms.lib.network.transciever.IsoMsgTransceiveFunction;
 import com.tms.lib.processor.SinkTransactionProcessor;
 import com.tms.lib.security.Encrypter;
@@ -114,11 +111,75 @@ public class ISOSinkNodeHelper {
             response.setResponseFromRemoteEntity(true);
             response.setRequestSent(true);
             response.setRequestRecordId(transactionRequest.getTransactionId());
+
+
+        }
+        //additional processing to reverse responseCodes -91,96,09
+        if(Arrays.asList("91","09","96").contains(response.getIsoResponseCode())){
+            log.error("An indeterminate response was received from switch, trigger reversal");
+            initiateReversal(transactionRequest, processorThatCanConvert);
+
+        }
+
+        log.trace("Channel response {}", LogHelper.dump(response));
+
+        return response;
+    }
+
+    public TransactionResponse sendTransactionReversal(TransactionRequest transactionRequest) throws TransactionProcessingException {
+        log.trace("Processing message \r\n {}", LogHelper.dump(transactionRequest));
+
+        transactionRequest.setSinkInterchange(interchange);
+
+        SinkTransactionProcessor processorThatCanConvert = getProcessorThatCanConvert(transactionRequest);
+        if (processorThatCanConvert == null) {
+            String msg = "Cannot process this message through interchange because there is no registered processor for it";
+            throw new TransactionProcessingException(msg);
+        }
+
+        // if (interchange.getConfig().isPinTranslationRequired()) {
+        doPinTranslation(transactionRequest);
+        // }
+
+        ISOMsg request = processorThatCanConvert.toISOMsg(transactionRequest);
+        log.trace("Raw ISO request \r\n {}", IsoLogger.dump(request));
+        ISOMsg rawResponse;
+
+        try {
+            rawResponse = transcieveFunction.transcieve(request);
+        } catch (InterchangeServiceException e) {
+            throw new TransactionProcessingException("Could not process request", e);
+
+        } catch (InterchangeIOException e) {
+            log.error("An IO error occurred while waiting for response", e);
+            initiateReversal(transactionRequest, processorThatCanConvert);
+            return constructIOResponse(transactionRequest);
+        }
+
+        if (rawResponse == null) {
+            log.info("No response from upstream, Raw response is null");
+            initiateReversal(transactionRequest, processorThatCanConvert);
+            return constructIOResponse(transactionRequest);
+        }
+        log.trace("Raw response {}", IsoLogger.dump(rawResponse));
+
+        TransactionResponse response;
+        try {
+            response = processorThatCanConvert.toTransactionResponse(rawResponse, transactionRequest);
+        } catch (Exception e) {
+            log.error("An error occurred while converting raw response", e);
+            initiateReversal(transactionRequest, processorThatCanConvert);
+            return constructErrorResponse(transactionRequest);
+        }
+        if (response != null) {
+            response.setResponseInterchange(interchange);
+            response.setResponseFromRemoteEntity(true);
+            response.setRequestSent(true);
+            response.setRequestRecordId(transactionRequest.getTransactionId());
             //additional processing to reverse responseCodes -91,96,09
             if(Arrays.asList("91","09","96").contains(response.getIsoResponseCode())){
                 log.error("An indeterminate response was received from switch, trigger reversal");
                 initiateReversal(transactionRequest, processorThatCanConvert);
-
             }
         }
 
@@ -245,12 +306,25 @@ public class ISOSinkNodeHelper {
         }
 
         TransactionRequest reversalAdviceTransactionRequest = processorThatCanReverse.toReversalRequest(channelRequest, interchange);
+        StringBuilder fld90=new StringBuilder();
         log.info("Channel Reversal request is {}", reversalAdviceTransactionRequest.toString());
         reversalAdviceTransactionRequest.setOriginalTransactionId(channelRequest.getTransactionId());
 
         ISOMsg rawRequest;
         try {
             rawRequest = processorThatCanReverse.toISOMsg(reversalAdviceTransactionRequest);
+
+            fld90.append(rawRequest.getString(0))
+                    .append(rawRequest.getString(11))
+                    .append(rawRequest.getString(7))
+                    .append(StringUtils.leftPad(
+                    (StringUtils.isEmpty(rawRequest.getString(32)) ?
+                            "" : rawRequest.getString(32)), 11, '0'))
+                    .append(StringUtils.leftPad(
+                            (StringUtils.isEmpty(rawRequest.getString(33)) ?
+                                    "" : rawRequest.getString(33)), 11, '0'));
+            rawRequest.set(90,fld90.toString());
+
         } catch (TransactionProcessingException e) {
             throw new ReversalProcessingException("Could not convert reversal advice request to iso msg", e);
         }
@@ -258,6 +332,7 @@ public class ISOSinkNodeHelper {
         if (rawRequest != null) {
             try {
                 rawRequest.setMTI(processorThatCanReverse.getReversalAdviceMti());
+
             } catch (ISOException e) {
                 throw new ReversalProcessingException("Could not set mti for reversal request", e);
             }
@@ -278,14 +353,16 @@ public class ISOSinkNodeHelper {
             if (rawRequestRepeat != null) {
                 try {
                     rawRequest.setMTI(processorThatCanReverse.getReversalAdviceRepeatMti());
+
                 } catch (ISOException e) {
                     throw new ReversalProcessingException("Could not set mti for reversal request", e);
                 }
             }
-            asyncWorkerPool.queueJob(() -> {
-                sendReversalAdviceRepeat(rawRequestRepeat, reversalAdviceTransactionRequest, processorThatCanConvert);
-                return null;
-            });
+            //prevent sending reversal repeat message
+//            asyncWorkerPool.queueJob(() -> {
+//                sendReversalAdviceRepeat(rawRequestRepeat, reversalAdviceTransactionRequest, processorThatCanConvert);
+//                return null;
+//            });
         }
 
     }
@@ -305,7 +382,7 @@ public class ISOSinkNodeHelper {
     }
 
     private TransactionResponse processRawReversalRequest(ISOMsg rawReversalRequest, TransactionRequest reversalAdviceChannelRequest, SinkTransactionProcessor processorThatCanConvert) throws ReversalProcessingException {
-        log.trace("Raw request \r\n {}", IsoLogger.dump(rawReversalRequest));
+        log.info("Raw Reversal request \r\n {}", IsoLogger.dump(rawReversalRequest));
         ISOMsg rawResponse;
         try {
             rawResponse = transcieveFunction.transcieve(rawReversalRequest);
@@ -317,11 +394,11 @@ public class ISOSinkNodeHelper {
             return constructIOResponse(reversalAdviceChannelRequest);
         }
         if (rawResponse == null) {
-            log.warn("No response from upstream");
+            log.info("No response from upstream");
             return constructIOResponse(reversalAdviceChannelRequest);
         }
 
-        log.trace("Raw response {}", IsoLogger.dump(rawResponse));
+        log.info("Raw response {}", IsoLogger.dump(rawResponse));
         TransactionResponse reversalAdviceChannelResponse = null;
         try {
             reversalAdviceChannelResponse = processorThatCanConvert.toTransactionResponse(rawResponse, reversalAdviceChannelRequest);
@@ -334,7 +411,7 @@ public class ISOSinkNodeHelper {
             reversalAdviceChannelResponse.setRequestSent(true);
             reversalAdviceChannelResponse.setRequestRecordId(reversalAdviceChannelRequest.getTransactionId());
         }
-        log.trace("Channel response {}", LogHelper.dump(reversalAdviceChannelResponse));
+        log.info("Channel response {}", LogHelper.dump(reversalAdviceChannelResponse));
 
         //TODO: send financial transaction advice if response code 25 was received
         return reversalAdviceChannelResponse;
