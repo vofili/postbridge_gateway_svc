@@ -13,13 +13,6 @@
         <module name="tms-switch-service" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="tms-pos" target="1.8" />
-      <module name="tms-switch" target="1.8" />
-      <module name="tms-switch-lib" target="1.8" />
-      <module name="tms-switch-postbridge" target="1.8" />
-      <module name="tms-switch-service" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
